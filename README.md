@@ -17,14 +17,14 @@ This app generates stats in Redis using Sorted Sets to create Top lists and bitf
 
 Installation
 =====
-# Check out git repo.
-# pip install -r requirements.txt
-# Start redis
-# python app.py
-# Go to localhost:8080/randomize
-# Enter the number of drivers, passengers, and rides you want to generate (Max 200 each of drivers and passengers)
-# Press Generate. Wait.
-# Play with stats.
+1. Check out git repo.
+2. pip install -r requirements.txt
+3. Start redis
+4. python app.py
+5. Go to localhost:8080/randomize
+6. Enter the number of drivers, passengers, and rides you want to generate (Max 200 each of drivers and passengers)
+7. Press Generate. Wait.
+8. Play with stats.
 
 Notes
 =====

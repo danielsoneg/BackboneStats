@@ -6,10 +6,10 @@ Requirements
 ========
 - redis (2.4.4)
 - python (2.7)
--- Modules:
---- Tornado
---- Redis
---- bitarray
+    - Modules:
+        - Tornado
+        - Redis
+        - bitarray
 
 Usage
 =====

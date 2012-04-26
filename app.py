@@ -15,7 +15,7 @@ import tornado.httpclient
 from tornado.options import define, options
 # Our modules
 import importer
-import stats
+import ridestats
 
 define("port", default=8080, help="run on the given port", type=int)
 
@@ -23,7 +23,7 @@ class BaseHandler(tornado.web.RequestHandler):
     """Contains common methods for all Stat calls."""
     def initialize(self):
         """Initializes the handler. Fired before requests are processed. Sets a date object & a redis connection"""
-        self.Stats = stats.Stats()
+        self.Stats = ridestats.Stats()
         # Date object for easier calls.
         today = date.today()
         self.date = {'now':today.isoformat()}
@@ -33,7 +33,7 @@ class BaseHandler(tornado.web.RequestHandler):
 
     def on_finish(self):
         """Clean up Redis connection"""
-        self.pool.close()
+        self.Stats.close()
     
     def getTitle(self, who,what,when):
         """ Cheap #hack to generate a title to hand to Backbone. """
@@ -92,7 +92,7 @@ class getUserStats(BaseHandler):
             data = self.__getTop(who,when,count)
         else:
             data = None
-        self.formatResponse(who, what, given_when, data)
+        self.stat(who, what, given_when, data)
     
     def post(self, who, what, when, count=10): 
         """Backbone Gets and Posts. We give identical responses to both."""
@@ -121,7 +121,7 @@ class getRideStats(BaseHandler):
         else:
             data = None
         logging.info(data)
-        self.formatResponse('rides', what, when, data)
+        self.stat('rides', what, when, data)
 
     def post(self, what, when, count=10): 
         """Backbone Gets and Posts. We give identical responses to both."""
@@ -190,8 +190,10 @@ class importStuff(BaseHandler):
             return True
 
 class Index(BaseHandler):
-    """Hand off index.html"""
+    """Hand off index.html if we have data, randomize if we don't"""
     def get(self):
+        if self.Stats.hasStats() == False:
+            self.redirect('/randomize')
         self.render('templates/index.html')
 
 class Randomizer(tornado.web.RequestHandler):

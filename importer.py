@@ -10,7 +10,7 @@ class RideImporter(object):
         super(RideImporter, self).__init__()
         self.pool = redis.ConnectionPool(host='localhost',db=1)
         self.redis = redis.Redis(connection_pool=self.pool)
-    
+
     def addUser(self,t,info):
         """Add a user to Redis. t: type of the user, either psng or drvr."""
         uid = self.redis.get('%s:nextid' % t) or 1

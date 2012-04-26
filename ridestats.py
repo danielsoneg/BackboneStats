@@ -18,6 +18,10 @@ class Stats(object):
         self.pool = redis.ConnectionPool(host='localhost',db=1)
         self.redis = redis.Redis(connection_pool=self.pool)
 
+    def hasStats(self):
+        """Checks if we have any stats - no passengers = no stats."""
+        return (self.redis.get('psng:nextid') != None)
+
     def getUserCounts(self,who,when):
         """Get bitarray from Redis, count "True"s"""
         table = "count:%s:%s" % (who,when)

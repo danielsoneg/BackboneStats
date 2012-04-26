@@ -40,7 +40,7 @@ class BaseHandler(tornado.web.RequestHandler):
         who = {'psng':"Passengers",'drvr':"Drivers",'rides':"Rides"}[who]
         what = {'top':"Top",'count':"Total"}[what]
         whenm = {'now':"Today",'week':"This Week",'month':"This Month",'year':"This Year"}
-        when = whenm[when] if when in whenm else "on %s" % when
+        when = whenm[when] if when in whenm else "for %s" % when
         name = "%s %s %s" % (what,who,when)
         return name
 
@@ -113,6 +113,7 @@ class getRideStats(BaseHandler):
     on the back end, interface may change."""
     def get(self,what,when,count=10):
         """Route requests to the appropriate handler"""
+        given_when = when
         when = self.parseDate(when)
         if what == "count":
             data = self.__getCounts(when)
@@ -121,7 +122,7 @@ class getRideStats(BaseHandler):
         else:
             data = None
         logging.info(data)
-        self.stat('rides', what, when, data)
+        self.stat('rides', what, given_when, data)
 
     def post(self, what, when, count=10): 
         """Backbone Gets and Posts. We give identical responses to both."""

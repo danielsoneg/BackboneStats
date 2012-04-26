@@ -1,0 +1,87 @@
+body {
+	background: url('/static/images/linen.png') #333;
+	font-family: Helvetica;
+	margin: 0;
+	padding: 0;
+}
+
+header {
+	margin: 1em auto;
+	max-width: 800px;
+	width: 96%;
+	height: 1em;
+	border-radius: 10px;
+	border: 1px solid #400;
+	background-color: #900;
+	padding: 1em 2%;
+	color: #fff;
+	font-size: 1em;
+	font-weight: bold;
+	text-align: center;
+}
+
+header #new, header #refresh {
+	display: block;
+	float: right;
+	width: 49%
+}
+
+header #new {
+	float: left;
+	border-right: 1px solid #ddd;
+}
+
+#main {
+	margin: 1em auto ;
+	max-width: 800px;
+	width: 96%;
+	border-radius: 10px;
+	border: 1px solid #888;
+	background: #fff;
+	padding: 2em 2%;
+	background: url('/static/images/snow.png') #fff;
+}
+
+.chart div {
+   font: 10px sans-serif;
+   background-color: steelblue;
+   text-align: right;
+   padding: 3px;
+   margin: 1px;
+   color: white;
+ }
+
+
+div.stat {  
+    padding: 0px;
+    margin: .5em 0 0 0;
+    border: 1px solid #eee;
+}
+div.stat h1 {
+    margin: 0;
+    padding: .3em;
+    background: rgb(70,130,180);	
+    font-size: 1.2em;
+    color: #fff;
+    text-align: center;
+    display: block;
+}
+div.stat .edit {
+    display: block;
+    background: #eee;
+    text-align: center;
+    padding: .2em;
+    border-bottom: 1px solid #ddd;
+}
+
+div.stat .counter,div.stat .empty {
+    text-align: center;
+    font-size: 2em;
+    padding: .5em;
+}
+
+div.stat .loading {
+	background: url('/static/images/spinner.gif') center center no-repeat;
+	display: block;
+	height: 100px;
+}

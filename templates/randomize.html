@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Ride Stats</title>
+</head>
+
+<body>
+	<h1>Ride Stat Randomizer!</h1>
+	<form action="/randomize" method="POST">
+		<label for='psng'>Passengers to create (max 200):</label><input id='psng' name='psng' value='50'></input><br/>
+		<label for='drvr'>Drivers to create (max 200):</label><input id='drvr' name='drvr' value='50'></input><br/>
+		<label for='rides'>Rides to create (max advisable 2000):</label><input id="rides" name='rides' value='1000'></input><br/>
+		<input type='submit' name="go" label="RANDOMIZE!"></input>
+	</form>
+</body>
+</html>

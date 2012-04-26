@@ -194,6 +194,7 @@ class Index(BaseHandler):
     def get(self):
         if self.Stats.hasStats() == False:
             self.redirect('/randomize')
+            return
         self.render('templates/index.html')
 
 class Randomizer(tornado.web.RequestHandler):

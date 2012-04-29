@@ -71,6 +71,7 @@ var StatView = Backbone.View.extend({
     this.input.find('#what').val(params.what);
     this.input.find('#when').val(params.when);
     this.input.find('#fordate').val(params.fordate);
+    this.input.submit(function(event) { event.preventDefault(); return false; });
     return this;
   },
 

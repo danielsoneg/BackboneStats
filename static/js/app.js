@@ -3,12 +3,12 @@ var Stat = Backbone.Model.extend({
   initialize: function() {
     if(!this.get('params')){
       // Set defaults for new stats
-      this.set('params',{who:'psng',what:'count',when:'week'});
+      this.set('params',{who:'psng',what:'count',when:'week',fordate:'today'});
     }
   },
   url: function() {
     // Calculate our base url given model parameters
-    return this.urlRoot + _.template("/<%=who %>/<%= what %>/<%=when %>", this.get('params'));
+    return this.urlRoot + _.template("/<%=who %>/<%= what %>/<%=when %>/<%=fordate %>", this.get('params'));
   }
 });
 
@@ -70,6 +70,7 @@ var StatView = Backbone.View.extend({
     this.input.find('#who').val(params.who);
     this.input.find('#what').val(params.what);
     this.input.find('#when').val(params.when);
+    this.input.find('#fordate').val(params.fordate);
     return this;
   },
 
@@ -103,6 +104,7 @@ var StatView = Backbone.View.extend({
     params.who = this.input.find('#who').val();
     params.what = this.input.find('#what').val();
     params.when = this.input.find('#when').val();
+    params.fordate = this.input.find('#fordate').val();
     this.model.set('params',params);
     this.model.fetch();
   }

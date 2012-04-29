@@ -31,6 +31,7 @@ Templates = {
     <option value="month">This Month</option>\
     <option value="year">This Year</option>\
   </select>\
+  <label class="fordate" for="for">For date:</label><input type="text" id="fordate" name="fordate"></input>\
   <input type="button" class="done" value="Update"></input>\
   <input type="button" class="del" value="Delete"></input>\
 </form>'

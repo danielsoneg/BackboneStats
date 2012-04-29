@@ -35,18 +35,29 @@ class BaseHandler(tornado.web.RequestHandler):
         """Clean up Redis connection"""
         self.Stats.close()
     
-    def getTitle(self, who,what,when):
+    def getTitle(self, who,what,when,fordate="today"):
         """ Cheap #hack to generate a title to hand to Backbone. """
+        if fordate == 'today': fordate = date.today().isoformat()
         who = {'psng':"Passengers",'drvr':"Drivers",'rides':"Rides"}[who]
         what = {'top':"Top",'count':"Total"}[what]
-        whenm = {'now':"Today",'week':"This Week",'month':"This Month",'year':"This Year"}
-        when = whenm[when] if when in whenm else "for %s" % when
-        name = "%s %s %s" % (what,who,when)
+        whenm = {'now':"the Day",'week':"the week",'month':"the month",'year':"the year"}
+        when = "%s of %s" % (whenm[when], fordate)
+        name = "%s %s for %s" % (what,who,when)
         return name
 
-    def parseDate(self, when):
+    def parseDate(self, when, fordate):
         # Convenience method for now
-        return self.date[when] if when in self.date else when
+        rideiso = date.today().isoformat() if fordate == 'today' or fordate == 'undefined' else fordate
+        ridedate = date(*[int(x) for x in rideiso.split('-')])
+        rd = {}
+        rd['today'] = ridedate.isoformat()
+        rd['week'] = ridedate.strftime('%Y-w%W')
+        rd['month'] = ridedate.strftime('%Y-%m')
+        rd['year'] = ridedate.year
+        if when in rd:
+            return rd[when]
+        else:
+            return rd['today']
 
     # Default methods: Fail nicely
     def post(self, **kwargs):
@@ -74,29 +85,31 @@ class BaseHandler(tornado.web.RequestHandler):
         if data: msg['data']=data
         self.write(msg)
 
-    def stat(self, who, what, when, data):
+    def stat(self, who, what, when, fordate, data):
         """Return a Stat model object for Backbone"""
-        params = {'who':who,'what':what,'when':when}
-        title = self.getTitle(who,what,when)
+        params = {'who':who,'what':what,'when':when,'fordate':fordate}
+        title = self.getTitle(who,what,when,fordate)
         self.write({'title':title,'data':data,'params':params})
 
 class getUserStats(BaseHandler):
     """getUserStats handles requests for information about Drivers and Pasengers"""
-    def get(self,who,what,when,count=10):
+    def get(self,who,what,when,fordate=None,count=10):
         """Routes get requests to the appropriate method, formats & returns response"""
         given_when = when
-        when = self.parseDate(when)
+        fordate = fordate or date.today().isoformat()
+        when = self.parseDate(given_when,fordate)
         if what == "count":
             data = self.__getCounts(who,when)
         elif what == "top":
             data = self.__getTop(who,when,count)
         else:
             data = None
-        self.stat(who, what, given_when, data)
+        self.stat(who, what, given_when, fordate, data)
     
-    def post(self, who, what, when, count=10): 
+    def post(self, who, what, when, fordate=None, count=10):
+        fordate = fordate or date.today().isoformat()
         """Backbone Gets and Posts. We give identical responses to both."""
-        return self.get(who, what, when, count)
+        return self.get(who, what, when, fordate, count)
 
     def __getCounts(self, who, when):
         """Requests counts for passengers or drivers from Stats database"""
@@ -111,27 +124,25 @@ class getUserStats(BaseHandler):
 class getRideStats(BaseHandler):
     """getUserStats handles requests for information about Rides. Distinct because different methods are used
     on the back end, interface may change."""
-    def get(self,what,when,count=10):
+    def get(self,what,when,fordate,count=10):
         """Route requests to the appropriate handler"""
         given_when = when
-        when = self.parseDate(when)
+        when = self.parseDate(when,fordate)
         if what == "count":
             data = self.__getCounts(when)
         elif what == "top":
             data = self.__getTop(when, count)
         else:
             data = None
-        logging.info(data)
-        self.stat('rides', what, given_when, data)
+        self.stat('rides', what, given_when,fordate, data)
 
-    def post(self, what, when, count=10): 
+    def post(self, what, when, fordate, count=10): 
         """Backbone Gets and Posts. We give identical responses to both."""
-        return self.get(what, when, count)
+        return self.get(what, when, fordate, count)
     
     def __getCounts(self, when):
         """Get number of miles riden"""
         count = self.Stats.getMileCounts(when)
-        logging.info(count)
         return count
         
     def __getTop(self, when, count):
@@ -238,8 +249,8 @@ def run():
     # Here there be regex
     application = tornado.web.Application([
         (r"/", Index),
-        (r"/Stats/(?P<who>psng|drvr)/(?P<what>.*?)/(?P<when>.*?)",getUserStats),
-        (r"/Stats/rides/(?P<what>.*?)/(?P<when>.*?)",getRideStats),
+        (r"/Stats/(?P<who>psng|drvr)/(?P<what>.*?)/(?P<when>.*?)/(?P<fordate>.*?)",getUserStats),
+        (r"/Stats/rides/(?P<what>.*?)/(?P<when>.*?)/(?P<fordate>.*?)",getRideStats),
         (r'/importer/(?P<who>user|ride)',importStuff),
         (r'/randomize',Randomizer)
         ],**settings)

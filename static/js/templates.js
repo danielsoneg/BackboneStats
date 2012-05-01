@@ -17,21 +17,21 @@ Templates = {
 
   , edit : '<form class="edit">\
   <select id="who">\
-    <option class="psng" value="psng">Passengers</option>\
-    <option class="drvr" value="drvr">Drivers</option>\
-    <option class="rides" value="rides">Rides</option>\
+    <option class="psng" value="psng" <%=params.who == "psng" ? "selected" : "" %>>Passengers</option>\
+    <option class="drvr" value="drvr" <%=params.who == "drvr" ? "selected" : "" %>>Drivers</option>\
+    <option class="rides" value="rides" <%=params.who == "rides" ? "selected" : "" %>>Rides</option>\
   </select>\
   <select id="what">\
-    <option value="count">Total</option>\
-    <option value="top">Top</option>\
+    <option value="count" <%=params.what == "count" ? "selected" : "" %>>Total</option>\
+    <option value="top" <%=params.what == "top" ? "selected" : "" %>>Top</option>\
   </select>\
   <select id="when">\
-    <option value="now">Today</option>\
-    <option value="week">This Week</option>\
-    <option value="month">This Month</option>\
-    <option value="year">This Year</option>\
+    <option value="now" <%=params.when == "now" ? "selected" : "" %>>Today</option>\
+    <option value="week" <%=params.when == "week" ? "selected" : "" %>>This Week</option>\
+    <option value="month" <%=params.when == "month" ? "selected" : "" %>>This Month</option>\
+    <option value="year" <%=params.when == "year" ? "selected" : "" %>>This Year</option>\
   </select>\
-  <label class="fordate" for="for">For date (yyyy-mm-dd):</label><input type="text" id="fordate" name="fordate"></input>\
+  <label class="fordate" for="for">For date (yyyy-mm-dd):</label><input type="text" id="fordate" name="fordate" value="<%=params.fordate %>"></input>\
   <input type="button" class="done" value="Update"></input>\
   <input type="button" class="del" value="Delete"></input>\
 </form>'

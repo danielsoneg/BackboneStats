@@ -56,9 +56,10 @@ var StatView = Backbone.View.extend({
     }
     dataview = dataview({data:data});
     var body = _.template(Templates.statTemplate);
+    var edit = _.template(Templates.edit, {params:params});
     body = body({data:dataview,
           title:this.model.get('title'),
-          edit:Templates.edit
+          edit:edit
           });
     this.$el.html(body);
     this.$el.attr('id','stat-' + this.model.cid).addClass('stat');
@@ -67,10 +68,6 @@ var StatView = Backbone.View.extend({
       this.drawChart();
     }
     this.input = this.$('.edit');// Update edit form
-    this.input.find('#who').val(params.who);
-    this.input.find('#what').val(params.what);
-    this.input.find('#when').val(params.when);
-    this.input.find('#fordate').val(params.fordate);
     this.input.submit(function(event) { event.preventDefault(); return false; });
     return this;
   },

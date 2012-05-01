@@ -35,7 +35,7 @@ var StatView = Backbone.View.extend({
   },
   tagName: 'div',
   initialize: function() {
-    this.model.bind('change:data', this.render,this);// Bind to data changes - stat has no data on init
+    this.model.bind('change:data change:title', this.render,this);// Bind to data and title changes - May lead to double updates.
     this.model.bind('destroy',this.remove,this);
     this.model.view = this;
   },
